@@ -8,8 +8,8 @@ class District < ActiveRecord::Base
     self.citizens.where(type: "Tribute")
   end
 
-  def can_reap?
-    tributes = reap
+  def can_reap?(game)
+    tributes = reap(game)
     if tributes[0].nil? || tributes[1].nil?
       return false
     else
@@ -17,7 +17,7 @@ class District < ActiveRecord::Base
     end
   end
 
-  def reap
+  def reap(game)
     citizens = []
     
     citizens << self.citizens.where(sex:"m").where("age BETWEEN 12 AND 18").sample
@@ -25,8 +25,8 @@ class District < ActiveRecord::Base
     if !citizens.include?(nil)
       citizens.each do |citizen|
         citizen.type = "Tribute"
+        citizen.game_id = game.id
         citizen.save
-        # binding.pry
       end
     end
     citizens

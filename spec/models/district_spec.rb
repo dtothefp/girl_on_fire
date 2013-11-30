@@ -35,7 +35,7 @@ describe District do
         end
 
         it "returns false" do
-          expect(district.can_reap?).to eq(false)
+          expect(district.can_reap?(game)).to eq(false)
         end
       end
 
@@ -59,7 +59,7 @@ describe District do
         end
 
         it "returns true" do
-          expect(district.can_reap?).to eq(true)
+          expect(district.can_reap?(game)).to eq(true)
         end
       end
     end
@@ -81,13 +81,13 @@ describe District do
       end
       it "2 citizens are chosen" do
         #binding.pry
-        expect(district.reap.count).to eq(2)
+        expect(district.reap(game).count).to eq(2)
       end
       it "has one male" do
-        expect(district.reap.select { |citizen| citizen.sex == "m"}.count ).to eq(1)
+        expect(district.reap(game).select { |citizen| citizen.sex == "m"}.count ).to eq(1)
       end
       it "has one female" do
-        expect(district.reap.select { |citizen| citizen.sex == "f"}.count ).to eq(1)
+        expect(district.reap(game).select { |citizen| citizen.sex == "f"}.count ).to eq(1)
       end
 
     end
@@ -109,14 +109,14 @@ describe District do
       end
 
       it "contains *that* female" do
-        expect(district.reap.select { |citizen| citizen.sex == "f"}[0]).to eq(@our_girl)
+        expect(district.reap(game).select { |citizen| citizen.sex == "f"}[0]).to eq(@our_girl)
       end
 
       it "contains *that* male" do
-        expect(district.reap.select { |citizen| citizen.sex == "m"}[0]).to eq(@our_guy)
+        expect(district.reap(game).select { |citizen| citizen.sex == "m"}[0]).to eq(@our_guy)
       end
     end
-    context "citizens chosen by the reap method are instantiated as Tributes" do
+    context "citizens chosen by the reap method are instantiated as Tributes and associated with a game" do
       before do
         district.save
         counter = 1
@@ -132,8 +132,12 @@ describe District do
         Citizen.last.age = 30
       end
       it "each chosen citizen is a tribute" do
-        expect(district.reap[0].type).to eq("Tribute")
-        expect(district.reap[1].type).to eq("Tribute")
+        expect(district.reap(game)[0].type).to eq("Tribute")
+        expect(district.reap(game)[1].type).to eq("Tribute")
+      end
+      it "associates chosen tributes with the current game" do
+        expect(district.reap(game)[0].game_id).to eq(game.id)
+        expect(district.reap(game)[1].game_id).to eq(game.id)
       end
     end
   end

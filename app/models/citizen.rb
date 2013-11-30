@@ -13,6 +13,21 @@ class Citizen < ActiveRecord::Base
   #   self.save
   # end
 
+ # 
+  def get_rating
+      self.rating = rand(1..12)
+      self.save
+  end
+
+  def get_sponsors
+    tribute = Tribute.find(self.id)
+    all_sponsors = Sponsor.all.where(game_id: self.game_id)
+    tribute.rating.times do
+      tribute.sponsors << all_sponsors.sample
+    end
+    return tribute.sponsors
+  end
+
 
 
   private

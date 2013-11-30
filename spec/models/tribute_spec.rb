@@ -16,12 +16,4 @@ describe Tribute do
     it { should have_many(:sponsors).through(:sponsorships) }
   end
 
-  describe "#rating" do
-    context "tributes gain a random rating" do
-      it "has a rating" do
-      end
-    end
-  end
-
-
 end
